@@ -65,3 +65,10 @@ def convergents_from_expansion(a0, expansion):
         old_num, old_den = result[-2]
         result.append(continued_convergent_step(num, den, old_num, old_den, a))
     return result
+
+
+def root_convergents_step(n, m, d, a, num, den, old_num, old_den):
+    new_m = d * a - m
+    new_d = (n - new_m * new_m) // d
+    new_a = (int(math.floor(math.sqrt(n))) + new_m) // new_d
+    return new_m, new_d, new_a, num * new_a + old_num, den * new_a + old_den, num, den

@@ -1,7 +1,6 @@
 import math
 from collections import Counter
 from string import ascii_uppercase
-from .gonal_funcs import check_gonal
 
 uppercase_letter_value = {}
 for _char in ascii_uppercase:
