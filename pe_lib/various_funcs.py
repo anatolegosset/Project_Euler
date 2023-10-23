@@ -1,11 +1,11 @@
 import math
 from collections import Counter
 from string import ascii_uppercase
-from gonal_funcs import *
 
 uppercase_letter_value = {}
 for _char in ascii_uppercase:
     uppercase_letter_value[_char] = ascii_uppercase.index(_char) + 1
+
 
 def word_value(word):
     result = 0
@@ -13,12 +13,14 @@ def word_value(word):
         result += uppercase_letter_value[char]
     return result
 
+
 def is_palindrome(number):
     num_str = str(number)
     for i in range(len(num_str) // 2):
-        if num_str[i] != num_str[-i-1]:
+        if num_str[i] != num_str[-i - 1]:
             return False
     return True
+
 
 def max_product(num_str, length=13):
     if len(num_str) < length:
@@ -36,14 +38,17 @@ def max_product(num_str, length=13):
 
     return current_max
 
+
 def is_pyth(a, b, c):
     return a * a + b * b == c * c
+
 
 def mini_prod(l, i, length):
     product = 1
     for j in range(i, i + length):
         product *= int(l[j])
     return product
+
 
 def simple_max_product_list(num_list, length=4):
     if len(num_list) < length:
@@ -55,6 +60,7 @@ def simple_max_product_list(num_list, length=4):
         acc = max(acc, mini_prod(num_list, i, length))
 
     return acc
+
 
 def generate_primes_under(n):
     root = math.ceil(math.sqrt(n))
@@ -72,11 +78,13 @@ def generate_primes_under(n):
 
     return primes
 
+
 def collatz_step(n):
     if n % 2 == 0:
         return n // 2
     else:
         return 3 * n + 1
+
 
 def is_pandigital(n):
     digits = []
@@ -85,6 +93,7 @@ def is_pandigital(n):
         digits.append(temp_n % 10)
         temp_n = temp_n // 10
     return sorted(digits) == list(range(1, len(digits) + 1))
+
 
 def check_if_pandigital_product(m, n):
     digits = []
@@ -105,12 +114,14 @@ def check_if_pandigital_product(m, n):
 
     return sorted(digits) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+
 def factorial(n):
     result = 1
     for i in range(2, n + 1):
         result *= i
 
     return result
+
 
 def generate_cycles(n):
     exponent = (len(str(n)) - 1)
@@ -123,6 +134,7 @@ def generate_cycles(n):
         result.append(current_number)
 
     return result
+
 
 def convert_to_fake_base(n, base=2):
     temp_n = n
@@ -138,9 +150,11 @@ def convert_to_fake_base(n, base=2):
 
     return true_result
 
+
 def remove_first_digit(n):
     exponent = int(math.floor(math.log10(n)))
     return n % 10 ** exponent
+
 
 # def nb_distinct_prime_factors(n):
 #     temp_n = n
@@ -168,15 +182,18 @@ def int_from_digit_list(digit_list, base=10, reverse=False):
             factor *= 10
     return result
 
+
 def is_int_in_order(n):
     listed_int = list(str(n))
     return listed_int == sorted(listed_int)
+
 
 def int_permutations(n):
     nb_digits = len(str(n))
     result = set()
     current_path = []
     possible = Counter([int(i) for i in str(n)])
+
     def rec_permute():
         if len(current_path) == nb_digits:
             result.add(int_from_digit_list(current_path))
@@ -188,8 +205,10 @@ def int_permutations(n):
                     rec_permute()
                     possible[i] += 1
                     current_path.pop()
+
     rec_permute()
     return sorted(list(result))
+
 
 def one_mask(n, digit):
     """
@@ -207,6 +226,7 @@ def one_mask(n, digit):
             mask_list.append("0")
     return int("".join(mask_list))
 
+
 def unique_digits(number, base=10):
     result = set()
     temp_number = number
@@ -214,6 +234,7 @@ def unique_digits(number, base=10):
         result.add(temp_number % base)
         temp_number = temp_number // base
     return sorted(list(result))
+
 
 def non_unique_digits(number, base=10, to_sort=True):
     result = []
@@ -226,14 +247,17 @@ def non_unique_digits(number, base=10, to_sort=True):
     else:
         return result
 
+
 def reverse(n):
     digit_list = non_unique_digits(n, to_sort=False)
     return int_from_digit_list(digit_list)
+
 
 def nb_digits(n, base=10):
     if n == 0:
         return 1
     return int(math.floor(math.log(n, base))) + 1
+
 
 def sum_of_digits(n, base=10):
     current_number = n
@@ -243,18 +267,22 @@ def sum_of_digits(n, base=10):
         current_number = current_number // base
     return current_sum
 
+
 def iterated_sum_of_digits(n, base=10):
     current_sum = n
     while current_sum >= base:
         current_sum = sum_of_digits(current_sum, base)
     return current_sum
 
+
 def ascii_list_to_str(ascii_list):
     result = [chr(i) for i in ascii_list]
     return "".join(result)
 
+
 def str_to_ascii_list(text_str):
     return [ord(i) for i in text_str]
+
 
 def decode_xor(text: list, key: str):
     """
@@ -271,6 +299,7 @@ def decode_xor(text: list, key: str):
 
     return result
 
+
 def fast_is_prime(n, primes):
     root = int(math.ceil(math.sqrt(n)))
     if root > primes[-1]:
@@ -281,14 +310,17 @@ def fast_is_prime(n, primes):
         elif n % prime == 0:
             return False
 
+
 def concat_ints(int_list):
     return int("".join([str(i) for i in int_list]))
+
 
 def generate_permutation(list_to_permute):
     result = []
     max_depth = len(list_to_permute)
     possible = Counter(list_to_permute)
     current_path = []
+
     def rec_permute():
         if len(current_path) == max_depth:
             result.append(list(current_path))
@@ -300,5 +332,6 @@ def generate_permutation(list_to_permute):
                     rec_permute()
                     current_path.pop()
                     possible[element] += 1
+
     rec_permute()
     return result
