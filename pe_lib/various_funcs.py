@@ -315,7 +315,24 @@ def concat_ints(int_list):
     return int("".join([str(i) for i in int_list]))
 
 
-def generate_permutation(list_to_permute):
+def generate_permutation(list_to_permute, constraints=None):
+    """
+    :param list_to_permute: the list of elements to generate a permutation of.
+    :param constraints: a list of functions. They must be of the form f: current_path, element -> can_add_element,
+                                                        returning True if element can be in the permutation at this spot
+    :return: a list of all possible permutations
+    """
+
+    if constraints is None:
+        def constraint_func(*args):
+            return True
+    else:
+        def constraint_func(previous_path, elem):
+            for constraint in constraints:
+                if not constraint(previous_path, elem):
+                    return False
+            return True
+
     result = []
     max_depth = len(list_to_permute)
     possible = Counter(list_to_permute)
@@ -326,7 +343,7 @@ def generate_permutation(list_to_permute):
             result.append(list(current_path))
         else:
             for element in possible:
-                if possible[element] > 0:
+                if possible[element] > 0 and constraint_func(current_path, element):
                     possible[element] -= 1
                     current_path.append(element)
                     rec_permute()
@@ -337,4 +354,10 @@ def generate_permutation(list_to_permute):
     return result
 
 
-
+def is_magic_n_gon(n_gon):
+    n = len(n_gon) // 2
+    line_sum = n_gon[0] + n_gon[1] + n_gon[3]
+    for i in range(n):
+        if n_gon[2 * i] + n_gon[2 * i + 1] + n_gon[(2 * i + 3) % (2 * n)] != line_sum:
+            return False
+    return True
