@@ -1,4 +1,4 @@
-from problems.p72_counting_fractions import *
+from problems.p74_digit_factorial_chain import *
 
 
 if __name__ == '__main__':

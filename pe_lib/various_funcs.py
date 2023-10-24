@@ -189,6 +189,13 @@ def factorial(n):
     return result
 
 
+_first_factorials = {i: factorial(i) for i in range(10)}
+
+
+def factorial_digit_sum(n):
+    return sum([_first_factorials[i] for i in non_unique_digits(n, to_sort=False)])
+
+
 def generate_cycles(n):
     exponent = (len(str(n)) - 1)
     factor = 10 ** exponent
