@@ -79,7 +79,10 @@ def generate_primes_under(n):
     return primes
 
 
-def prime_decomposition(n, primes):
+def prime_decomposition(n, primes=None):
+    if primes is None:
+        print("Warning: slow factorization due to prime generation.")
+        primes = generate_primes_under(n)
     if n == 0:
         raise ValueError("Cannot do prime decomposition of 0.")
     result = []
@@ -273,6 +276,10 @@ def non_unique_digits(number, base=10, to_sort=True):
         return sorted(result)
     else:
         return result
+
+
+def is_int_permutation_of(a, b):
+    return non_unique_digits(a) == non_unique_digits(b)
 
 
 def reverse(n):
