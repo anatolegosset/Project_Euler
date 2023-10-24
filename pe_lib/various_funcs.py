@@ -62,17 +62,21 @@ def simple_max_product_list(num_list, length=4):
     return acc
 
 
-def generate_primes_under(n):
-    root = math.ceil(math.sqrt(n))
-    is_prime = [True] * n
+def generate_primes_under(n, under_root=False):
+    if under_root:
+        max_n = math.ceil(math.sqrt(n))
+    else:
+        max_n = n
+    root = math.ceil(math.sqrt(max_n))
+    is_prime = [True] * (max_n + 1)
     primes = []
     for i in range(2, root):
         if is_prime[i]:
             primes.append(i)
-            for j in range(i * i, n, i):
+            for j in range(i * i, max_n + 1, i):
                 is_prime[j] = False
 
-    for j in range(root, n):
+    for j in range(root, max_n + 1):
         if is_prime[j]:
             primes.append(j)
 
@@ -80,14 +84,23 @@ def generate_primes_under(n):
 
 
 def prime_decomposition(n, primes=None):
+    root = math.ceil(math.sqrt(n))
+
     if primes is None:
         print("Warning: slow factorization due to prime generation.")
-        primes = generate_primes_under(n)
+        primes = generate_primes_under(n, under_root=True)
+
+    if root > 2 * primes[-1]:
+        raise ValueError("n too big to factorize with primes given")
+
     if n == 0:
         raise ValueError("Cannot do prime decomposition of 0.")
+
     result = []
     temp_n = n
     for prime in primes:
+        if prime > root:
+            break
         alpha = 0
         while temp_n % prime == 0:
             alpha += 1
@@ -97,15 +110,38 @@ def prime_decomposition(n, primes=None):
         if temp_n == 1:
             break
     if temp_n > 1:
-        raise ValueError("n too big to factorize with primes given")
+        result.append((temp_n, 1))
     return result
 
 
-def totient(n, primes):
-    decomp = prime_decomposition(n, primes)
+def totient(n, primes=None):
+    root = math.ceil(math.sqrt(n))
+
+    if primes is None:
+        print("Warning: slow factorization due to prime generation.")
+        primes = generate_primes_under(n, under_root=True)
+
+    if root > 2 * primes[-1]:
+        raise ValueError("n too big to factorize with primes given")
+
+    if n == 0:
+        raise ValueError("Cannot compute phi(0).")
+
     result = 1
-    for prime, alpha in decomp:
-        result *= pow(prime, alpha - 1) * (prime - 1)
+    temp_n = n
+    for prime in primes:
+        if prime > root:
+            break
+        if temp_n % prime == 0:
+            temp_n = temp_n // prime
+            result *= (prime - 1)
+        while temp_n % prime == 0:
+            result *= prime
+            temp_n = temp_n // prime
+        if temp_n == 1:
+            break
+    if temp_n > 1:
+        result *= temp_n - 1
     return result
 
 

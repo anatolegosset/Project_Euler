@@ -1,4 +1,4 @@
-from problems.p71_ordered_fractions import *
+from problems.p72_counting_fractions import *
 
 
 if __name__ == '__main__':
