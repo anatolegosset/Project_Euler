@@ -79,6 +79,33 @@ def generate_primes_under(n):
     return primes
 
 
+def prime_decomposition(n, primes):
+    if n == 0:
+        raise ValueError("Cannot do prime decomposition of 0.")
+    result = []
+    temp_n = n
+    for prime in primes:
+        alpha = 0
+        while temp_n % prime == 0:
+            alpha += 1
+            temp_n = temp_n // prime
+        if alpha > 0:
+            result.append((prime, alpha))
+        if temp_n == 1:
+            break
+    if temp_n > 1:
+        raise ValueError("n too big to factorize with primes given")
+    return result
+
+
+def totient(n, primes):
+    decomp = prime_decomposition(n, primes)
+    result = 1
+    for prime, alpha in decomp:
+        result *= pow(prime, alpha - 1) * (prime - 1)
+    return result
+
+
 def collatz_step(n):
     if n % 2 == 0:
         return n // 2
@@ -189,13 +216,13 @@ def is_int_in_order(n):
 
 
 def int_permutations(n):
-    nb_digits = len(str(n))
+    number_of_digits = len(str(n))
     result = set()
     current_path = []
     possible = Counter([int(i) for i in str(n)])
 
     def rec_permute():
-        if len(current_path) == nb_digits:
+        if len(current_path) == number_of_digits:
             result.add(int_from_digit_list(current_path))
         else:
             for i in possible.keys():

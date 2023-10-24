@@ -1,4 +1,4 @@
-from problems.p68_magic_5gon_ring import *
+from problems.p69_totient_maximum import *
 
 if __name__ == '__main__':
     print(main())
