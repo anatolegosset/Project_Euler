@@ -1,4 +1,4 @@
-from problems.p74_digit_factorial_chain import *
+from problems.p75_singular_integer_right_triangle import *
 
 
 if __name__ == '__main__':
