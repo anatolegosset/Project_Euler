@@ -1,4 +1,4 @@
-from problems.p70_totient_permutation import *
+from problems.p71_ordered_fractions import *
 
 
 if __name__ == '__main__':
