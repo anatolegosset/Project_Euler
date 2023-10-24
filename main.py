@@ -1,4 +1,4 @@
-from problems.p75_singular_integer_right_triangle import *
+from problems.p77_prime_summations import *
 
 
 if __name__ == '__main__':
