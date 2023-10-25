@@ -83,6 +83,24 @@ def generate_primes_under(n, under_root=False):
     return primes
 
 
+def generate_divisors_under(n, include_self=True, include_1=True):
+    result = [set() for _ in range(n + 1)]
+    min_i = 1
+    min_j = 1
+    if not include_1:
+        min_i += 1
+    if not include_self:
+        min_j += 1
+
+    for i in range(min_i, n + 1):
+        j = min_j
+        while j * i <= n:
+            result[i * j].add(i)
+            j += 1
+
+    return [sorted(list(divisors)) for divisors in result]
+
+
 def prime_decomposition(n, primes=None):
     root = math.ceil(math.sqrt(n))
 
