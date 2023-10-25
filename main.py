@@ -1,6 +1,4 @@
-from problems.p82_path_sum_three_ways import *
-from pe_lib import sum_of_digits
-
+from problems.p87_prime_power_triples import *
 
 if __name__ == '__main__':
     print(main())

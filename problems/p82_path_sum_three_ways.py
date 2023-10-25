@@ -28,5 +28,3 @@ def main():
         else:
             return distances[x][y]
 
-    current_node =
-
