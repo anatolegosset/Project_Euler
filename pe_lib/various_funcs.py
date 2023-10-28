@@ -101,6 +101,24 @@ def generate_divisors_under(n, include_self=True, include_1=True):
     return [sorted(list(divisors)) for divisors in result]
 
 
+def generate_sod_under(n, include_self=True, include_1=True):
+    result = [0 for _ in range(n + 1)]
+    min_i = 1
+    min_j = 1
+    if not include_1:
+        min_i += 1
+    if not include_self:
+        min_j += 1
+
+    for i in range(min_i, n + 1):
+        j = min_j
+        while j * i <= n:
+            result[i * j] += i
+            j += 1
+
+    return result
+
+
 def prime_decomposition(n, primes=None):
     root = math.ceil(math.sqrt(n))
 
@@ -170,13 +188,17 @@ def collatz_step(n):
         return 3 * n + 1
 
 
-def is_pandigital(n):
+def is_pandigital(n, k=None):
     digits = []
     temp_n = n
     while temp_n > 0:
         digits.append(temp_n % 10)
         temp_n = temp_n // 10
-    return sorted(digits) == list(range(1, len(digits) + 1))
+    if k is None:
+        target = len(digits) + 1
+    else:
+        target = k + 1
+    return sorted(digits) == list(range(1, target))
 
 
 def check_if_pandigital_product(m, n):
@@ -456,3 +478,63 @@ def is_magic_n_gon(n_gon):
         if n_gon[2 * i] + n_gon[2 * i + 1] + n_gon[(2 * i + 3) % (2 * n)] != line_sum:
             return False
     return True
+
+
+def _n_choose_k(set_to_choose_from, k, previous_subsets=None):
+    if min(set_to_choose_from) < 0:
+        raise ValueError("_n_choose_k function in various_funcs cannot choose from negative integers.")
+    choices = set(set_to_choose_from)
+    n = len(choices)
+    if k < 0 or k > n:
+        if previous_subsets is None:
+            return []
+        else:
+            return previous_subsets
+    else:
+        if previous_subsets is None:
+            result = []
+        else:
+            result = previous_subsets
+        current_set = []
+
+        def _rec_choose(previous):
+            if len(current_set) == k:
+                result.append(list(current_set))
+                return None
+            else:
+                for a in set_to_choose_from:
+                    if a > previous:
+                        current_set.append(a)
+                        _rec_choose(a)
+                        current_set.pop()
+
+        _rec_choose(-1)
+        return result
+
+
+def gen_subsets(set_to_sub, k=None):
+    if k is None:
+        result = []
+        for k in range(len(set_to_sub) + 1):
+            _n_choose_k(set_to_sub, k, result)
+        return result
+    else:
+        return _n_choose_k(set_to_sub, k)
+
+
+def generate_cartesian_product(set_to_perm, k):
+    result = []
+    current_path = []
+
+    def _rec_product():
+        if len(current_path) == k:
+            result.append(list(current_path))
+        else:
+            for a in set_to_perm:
+                current_path.append(a)
+                _rec_product()
+                current_path.pop()
+
+    _rec_product()
+    return result
+
