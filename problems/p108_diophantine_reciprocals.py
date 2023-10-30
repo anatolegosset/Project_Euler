@@ -1,12 +1,19 @@
-def main():
-    n = 4
-    while True:
-        nb_sols = 0
-        for i in range(n + 1, 2 * n + 1):
-            if (n * i) % abs(i - n) == 0:
-                nb_sols += 1
-        print(n, nb_sols)
-        if nb_sols > 1000:
-            return n
-        else:
-            n += 1
+from pe_lib import prime_decomp_under
+
+
+def _nb_divisors_of_square_from_prime_decomp(decomp: dict):
+    product = 1
+    for alpha in decomp.values():
+        product *= (2 * alpha + 1)
+    return (product + 1) // 2
+
+
+def main(max_n=1000000):
+    decomps = prime_decomp_under(max_n)
+    best_n = 0
+    for n, decomp in decomps:
+        if _nb_divisors_of_square_from_prime_decomp(decomp) > 1000:
+            best_n = n
+            print(decomp)
+            break
+    return best_n

@@ -39,6 +39,13 @@ def max_product(num_str, length=13):
     return current_max
 
 
+def lprod(int_list, start=1):
+    result = start
+    for a in int_list:
+        result *= a
+    return result
+
+
 def is_pyth(a, b, c):
     return a * a + b * b == c * c
 
@@ -81,6 +88,41 @@ def generate_primes_under(n, under_root=False):
             primes.append(j)
 
     return primes
+
+
+def prime_decomp_under(n):
+    root = int(math.sqrt(n)) + 1
+    primes = generate_primes_under(n)
+    decomps = [(1, Counter())]
+    large_prime_decomps = []
+    for prime in primes:
+        if prime > n // 2:
+            large_prime_decomps.append((prime, Counter({prime: 1})))
+            continue
+        elif prime > root:
+            for a, decomp in decomps:
+                product = prime * a
+                if product > n:
+                    break
+                large_prime_decomps.append((product, Counter({prime: 1}) + decomp))
+        else:
+            exponent = 1
+            factor = prime
+            new_decomps = []
+            while True:
+                if factor > n:
+                    break
+                for a, decomp in decomps:
+                    product = factor * a
+                    if product > n:
+                        break
+                    new_decomps.append((product, Counter({prime: exponent}) + decomp))
+
+                exponent += 1
+                factor *= prime
+            decomps = sorted(decomps + new_decomps)
+    decomps = sorted(decomps + large_prime_decomps)
+    return sorted(decomps, key=(lambda x: x[0]))
 
 
 def generate_divisors_under(n, include_self=True, include_1=True):
@@ -127,7 +169,7 @@ def prime_decomposition(n, primes=None):
         primes = generate_primes_under(n, under_root=True)
 
     if root > 2 * primes[-1]:
-        raise ValueError("n too big to factorize with primes given")
+        print("Warning: n could be too big to factorize with primes given")
 
     if n == 0:
         raise ValueError("Cannot do prime decomposition of 0.")
@@ -418,13 +460,15 @@ def decode_xor(text: list, key: str):
 
 
 def fast_is_prime(n, primes):
+    if n == 1:
+        return False
     root = int(math.ceil(math.sqrt(n)))
     if root > primes[-1]:
         raise ValueError("Warning: not enough primes in list for fast_is_prime.")
     for prime in primes:
         if prime > root:
             return True
-        elif n % prime == 0:
+        elif n % prime == 0 and n != prime:
             return False
 
 
