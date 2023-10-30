@@ -1,4 +1,4 @@
-from pe_lib import compute_gonal, quadratic_auto_solver
+from pe_lib import quadratic_auto_solver, generate_primes_under, fast_is_prime
 
 
 def _vertical_quadratic(ring_nb):
@@ -30,7 +30,7 @@ def _value_from_coordinates(ring_nb, side, left):
         return _vertical_quadratic(ring_nb) + (ring_nb + 1) * side + left
 
 
-def _nb_prime_differences(n):
+def _neighbours(n):
     ring_nb, side, left = _find_coordinates(n)
     neighbours = []
     if side == 0 and left == 0:
@@ -59,9 +59,31 @@ def _nb_prime_differences(n):
     return neighbours
 
 
-def main():
-    for i in range(2, 50):
-        a, b, c = _find_coordinates(i)
-        print(i, (a, b, c), _value_from_coordinates(a, b, c))
-    print(_find_coordinates(19))
-    print(_nb_prime_differences(7))
+def main(max_n=200_000_000_000):
+    primes = generate_primes_under(max_n, under_root=True)
+    valid_tiles = [1, 2]
+    for ring_nb in range(1, _find_ring_nb(max_n) - 1):
+        for side in range(6):
+            value = _value_from_coordinates(ring_nb, side, 0)
+            neighbours = _neighbours(value)
+            nb_prime_differences = 0
+            for neighbour in neighbours:
+                if fast_is_prime(abs(neighbour - value), primes):
+                    nb_prime_differences += 1
+            if nb_prime_differences == 3:
+                valid_tiles.append(value)
+        value = _value_from_coordinates(ring_nb, 5, ring_nb)
+        neighbours = _neighbours(value)
+        nb_prime_differences = 0
+        for neighbour in neighbours:
+            if fast_is_prime(abs(neighbour - value), primes):
+                nb_prime_differences += 1
+        if nb_prime_differences == 3:
+            valid_tiles.append(value)
+        if len(valid_tiles) >= 2000:
+            break
+    print(len(valid_tiles), valid_tiles)
+    try:
+        return valid_tiles[1999]
+    except IndexError:
+        print(f"{max_n=} is too low to find 2000th valid number")
