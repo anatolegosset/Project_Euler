@@ -125,8 +125,8 @@ def prime_decomp_under(n):
     return sorted(decomps, key=(lambda x: x[0]))
 
 
-def generate_divisors_under(n, include_self=True, include_1=True):
-    result = [set() for _ in range(n + 1)]
+def generate_divisors_under(n, include_self=True, include_1=True, to_sort=True):
+    result = [[] for _ in range(n + 1)]
     min_i = 1
     min_j = 1
     if not include_1:
@@ -135,12 +135,15 @@ def generate_divisors_under(n, include_self=True, include_1=True):
         min_j += 1
 
     for i in range(min_i, n + 1):
-        j = min_j
-        while j * i <= n:
-            result[i * j].add(i)
-            j += 1
+        product = i * min_j
+        while product <= n:
+            result[product].append(i)
+            product += i
 
-    return [sorted(list(divisors)) for divisors in result]
+    if to_sort:
+        return [sorted(divisors) for divisors in result]
+    else:
+        return result
 
 
 def generate_sod_under(n, include_self=True, include_1=True):
@@ -459,17 +462,18 @@ def decode_xor(text: list, key: str):
     return result
 
 
-def fast_is_prime(n, primes):
+def fast_is_prime(n, primes, ignore_low_primes=False):
     if n == 1:
         return False
     root = int(math.ceil(math.sqrt(n)))
-    if root > primes[-1]:
+    if not ignore_low_primes and root > primes[-1]:
         raise ValueError("Warning: not enough primes in list for fast_is_prime.")
     for prime in primes:
         if prime > root:
             return True
         elif n % prime == 0 and n != prime:
             return False
+    return True
 
 
 def concat_ints(int_list):
@@ -582,3 +586,18 @@ def generate_cartesian_product(set_to_perm, k):
     _rec_product()
     return result
 
+
+def multiplicative_order(k: int, n: int):
+    """
+    :param k: int
+    :param n: int
+    :return: the least positive integer alpha such that k ** alpha == 1 mod n
+    """
+    if math.gcd(k, n) != 1:
+        raise ValueError(f"{k} and {n} are not coprime and so cannot compute order of k in Z/nZ.")
+    order_10 = 1
+    remainder = 10
+    while remainder != 1:
+        remainder = (remainder * 10) % n
+        order_10 += 1
+    return order_10

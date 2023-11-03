@@ -19,3 +19,6 @@ def quadratic_auto_solver(quadratic, value=0):
     else:
         return [(-1 * b - math.sqrt(disc_sq)) / (2 * a), (-1 * b + math.sqrt(disc_sq)) / (2 * a)]
 
+
+
+
