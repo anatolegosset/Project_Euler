@@ -1,5 +1,4 @@
-from problems.p138_special_isosceles_triangle import *
+from src.project_euler.problems import main
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(main())
