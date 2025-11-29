@@ -151,6 +151,11 @@ def smallest_prime_factors(n: int) -> list[int]:
 
 
 def fast_prime_decomp_under(n: int):
+    """
+    For any integer n >= 1, returns a list of dicts output such that for all i such
+    that 0 <= i <= n, output[i] is a dict that maps prime divisors of i to their
+    exponent in the prime decomposition of i.
+    """
     output = [Counter(), Counter()]
     spf = smallest_prime_factors(n)
     for k in range(2, n + 1):
@@ -272,7 +277,7 @@ def prime_decomposition(n, primes=None):
     return result
 
 
-def totient(n: int, primes=None):
+def compute_totient(n: int, primes=None):
     """
     Computes the totient function for n.
 
@@ -646,6 +651,8 @@ def _n_choose_k(set_to_choose_from, k, previous_subsets=None):
 
 
 def gen_subsets(set_to_sub, k=None):
+    if len(set_to_sub) == 0 and k == 0:
+        return [[]]
     if k is None:
         result = []
         for k in range(len(set_to_sub) + 1):
@@ -715,7 +722,6 @@ def crt_solve(rem_1: int, mod_1: int, rem_2: int, mod_2: int) -> int:
     - 0 <= x < mod_1 * mod_2
     """
     c_1, c_2 = bezout_solve(mod_1, mod_2)
-    pouet = c_1 * mod_1 + c_2 * mod_2
     return (rem_1 * c_2 * mod_2 + rem_2 * c_1 * mod_1) % (mod_1 * mod_2)
 
 
@@ -723,8 +729,11 @@ def crt_solve_multi(constraints: Iterator[tuple[int, int]]) -> int:
     """
     If constraints is a list[tuple[int, int]] such that the x[1] are pairwise coprime
     for all x in constraints, returns the only integer matching all constraints.
+
+    Works even if len(constraints) == 1
     """
     current_sol, current_mod = next(constraints)
+    current_sol = current_sol % current_mod
     for rem, modulus in constraints:
         current_sol = crt_solve(current_sol, current_mod, rem, modulus)
         current_mod = current_mod * modulus

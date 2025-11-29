@@ -1,4 +1,4 @@
-from src.project_euler.lib import totient, generate_primes_under
+from src.project_euler.lib import compute_totient, generate_primes_under
 
 
 def main(max_n=1_000_000):
@@ -6,7 +6,7 @@ def main(max_n=1_000_000):
     current_max = 0
     best_n = 0
     for n in range(1, max_n + 1):
-        a = n / totient(n, primes)
+        a = n / compute_totient(n, primes)
         if a > current_max:
             print(n, current_max)
             current_max = a
